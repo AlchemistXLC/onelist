@@ -4,7 +4,7 @@ import json
 import pickle
 import hashlib
 
-from cache import Cache
+from dcache import Cache
 from utils import path_format
 from config import config
 from urllib import request, parse
@@ -28,18 +28,12 @@ class OneDrive():
         self.expires_on = ''
         self.access_token = ''
         self.refresh_token = config.token
-        
-        try:
-            self.redirect_uri = config.redirect_uri
-            assert '://' in self.redirect_uri
-        except:
-            self.redirect_uri = 'http://localhost/onedrive-login'
 
     def get_access(self, resource='https://api.office.com/discovery/'):
         res = self._http_request('https://login.microsoftonline.com/common/oauth2/token', method='POST', data={
             'client_id': 'ea2b36f6-b8ad-40be-bc0f-e5e4a4a7d4fa',
             'client_secret': 'h27zG8pr8BNsLU0JbBh5AOznNS5Of5Y540l/koc7048=',
-            'redirect_uri': self.redirect_uri,
+            'redirect_uri': 'https://api.moeclub.org/onedrive-login',
             'refresh_token': self.refresh_token,
             'grant_type': 'refresh_token',
             'resource': resource
@@ -120,7 +114,6 @@ class OneDrive():
         headers = self._request_headers.copy()
         if self.access_token:
             headers['Authorization'] = "Bearer " + self.access_token
-
         data = parse.urlencode(data).encode('utf-8')
         res = json.loads(request.urlopen(request.Request(
             url, method=method, data=data, headers=headers)).read().decode('utf-8'))

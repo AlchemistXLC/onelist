@@ -1,16 +1,13 @@
-# Author:  MoeClub.org, sxyazi
-
-import redis
+import diskcache
 import pickle
 import hashlib
 
-r = redis.Redis(host='127.0.0.1', port=6379, db=0)
-# r = redis.Redis(host='Redis_URL', port=PORT, db=0, password='Password', ssl=True, ssl_ca_certs='ca.pem')
 
+r = diskcache.Cache('tmp')
 
 class Cache:
     CACHED_SECONDS = 768
-
+    
     @classmethod
     def get(cls, path):
         if cls.has(path):
@@ -19,7 +16,7 @@ class Cache:
 
     @classmethod
     def has(cls, path):
-        return r.exists(cls._get_key(path))
+        return r.get(cls._get_key(path)) is not None
 
     @classmethod
     def set(cls, path, entity, expire=CACHED_SECONDS):
