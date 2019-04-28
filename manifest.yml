@@ -1,0 +1,4 @@
+---
+applications:
+- name: yume
+command: python app.py
