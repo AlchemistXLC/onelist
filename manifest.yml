@@ -1,4 +1,0 @@
----
-applications:
-- name: ruyo
-command: python app.py
